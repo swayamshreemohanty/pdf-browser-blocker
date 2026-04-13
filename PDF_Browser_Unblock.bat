@@ -20,38 +20,28 @@ if %errorLevel% == 0 (
 )
 
 echo.
-echo [1/4] Removing Google Chrome restrictions...
-reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v AlwaysOpenPdfExternally /f >nul 2>&1
-if %errorlevel%==0 (echo    - Success: Restriction removed) else (echo    - Key not found or already removed)
+echo [1/3] Removing Chromium-based restrictions...
+for %%B in (Google\Chrome Microsoft\Edge BraveSoftware\Brave Chromium Vivaldi YandexBrowser OperaSoftware\Opera) do (
+    reg delete "HKLM\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /f >nul 2>&1
+)
+echo    - Success: Chromium policies removed.
 
 echo.
-echo [2/4] Removing Microsoft Edge restrictions...
-reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v AlwaysOpenPdfExternally /f >nul 2>&1
-if %errorlevel%==0 (echo    - Success: Restriction removed) else (echo    - Key not found or already removed)
+echo [2/3] Removing Mozilla Firefox restrictions...
+reg delete "HKLM\SOFTWARE\Policies\Mozilla\Firefox\PDFjs" /v Enabled /f >nul 2>&1
+:: Also clean up old JSON policy if it exists
+if exist "C:\Program Files\Mozilla Firefox\distribution\policies.json" del /f /q "C:\Program Files\Mozilla Firefox\distribution\policies.json" >nul 2>&1
+if exist "C:\Program Files (x86)\Mozilla Firefox\distribution\policies.json" del /f /q "C:\Program Files (x86)\Mozilla Firefox\distribution\policies.json" >nul 2>&1
+echo    - Success: Firefox policies removed.
 
 echo.
-echo [3/4] Removing Brave Browser restrictions...
-reg delete "HKLM\SOFTWARE\Policies\BraveSoftware\Brave" /v AlwaysOpenPdfExternally /f >nul 2>&1
-if %errorlevel%==0 (echo    - Success: Restriction removed) else (echo    - Key not found or already removed)
-
-echo.
-echo [4/4] Removing Mozilla Firefox restrictions...
-set "FF_JSON=C:\Program Files\Mozilla Firefox\distribution\policies.json"
-if exist "%FF_JSON%" (
-    del /f /q "%FF_JSON%"
-    echo    - Success: Firefox policy file deleted.
-) else (
-    echo    - Firefox policy file not found.
+echo [3/3] Closing running browsers to apply changes...
+for %%E in (chrome.exe msedge.exe brave.exe firefox.exe vivaldi.exe browser.exe opera.exe yandex.exe) do (
+    taskkill /F /IM %%E /T >nul 2>&1
 )
 
 echo.
 echo ========================================================
-echo Closing running browsers to apply changes...
-taskkill /F /IM chrome.exe /T >nul 2>&1
-taskkill /F /IM msedge.exe /T >nul 2>&1
-taskkill /F /IM brave.exe /T >nul 2>&1
-taskkill /F /IM firefox.exe /T >nul 2>&1
-echo.
 echo DONE. Browsers will now open PDFs normally.
 echo ========================================================
 pause

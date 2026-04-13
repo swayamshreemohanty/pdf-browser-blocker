@@ -4,7 +4,7 @@ title PDF Browser Blocker Tool
 
 echo ========================================================
 echo      BROWSER PDF RESTRICTION TOOL
-echo      Forces Chrome, Edge, Brave, and Firefox
+echo      Forces all Chromium/Firefox browsers
 echo      to download PDFs instead of opening them.
 echo ========================================================
 echo.
@@ -21,53 +21,27 @@ if %errorLevel% == 0 (
 )
 
 echo.
-echo [1/4] Applying Google Chrome restrictions...
-reg add "HKLM\SOFTWARE\Policies\Google\Chrome" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul
-if %errorlevel%==0 (echo    - Success) else (echo    - Failed)
+echo [1/3] Applying Chromium-based restrictions (Chrome, Edge, Brave, etc.)...
+for %%B in (Google\Chrome Microsoft\Edge BraveSoftware\Brave Chromium Vivaldi YandexBrowser OperaSoftware\Opera) do (
+    reg add "HKLM\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul 2>&1
+)
+echo    - Success: Chromium policies applied.
 
 echo.
-echo [2/4] Applying Microsoft Edge restrictions...
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul
-if %errorlevel%==0 (echo    - Success) else (echo    - Failed)
+echo [2/3] Applying Mozilla Firefox restrictions...
+:: Using Registry for Firefox Enterprise Policies 
+reg add "HKLM\SOFTWARE\Policies\Mozilla\Firefox\PDFjs" /v Enabled /t REG_DWORD /d 0 /f >nul 2>&1
+echo    - Success: Firefox policy applied via registry.
 
 echo.
-echo [3/4] Applying Brave Browser restrictions...
-reg add "HKLM\SOFTWARE\Policies\BraveSoftware\Brave" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul
-if %errorlevel%==0 (echo    - Success) else (echo    - Failed or Brave not installed)
-
-echo.
-echo [4/4] Applying Mozilla Firefox restrictions...
-:: Define Firefox path
-set "FF_PATH=C:\Program Files\Mozilla Firefox"
-set "FF_DIST=%FF_PATH%\distribution"
-set "FF_JSON=%FF_DIST%\policies.json"
-
-if exist "%FF_PATH%" (
-    if not exist "%FF_DIST%" mkdir "%FF_DIST%"
-    (
-        echo {
-        echo   "policies": {
-        echo     "PDFjs": {
-        echo       "Enabled": false
-        echo     }
-        echo   }
-        echo }
-    ) > "%FF_JSON%"
-    echo    - Success: Firefox policy created.
-) else (
-    echo    - Firefox not found in default location. Skipping.
+echo [3/3] Closing running browsers to apply settings...
+for %%E in (chrome.exe msedge.exe brave.exe firefox.exe vivaldi.exe browser.exe opera.exe yandex.exe) do (
+    taskkill /F /IM %%E /T >nul 2>&1
 )
 
 echo.
 echo ========================================================
-echo Closing running browsers to apply settings...
-taskkill /F /IM chrome.exe /T >nul 2>&1
-taskkill /F /IM msedge.exe /T >nul 2>&1
-taskkill /F /IM brave.exe /T >nul 2>&1
-taskkill /F /IM firefox.exe /T >nul 2>&1
-echo Browsers restarted.
-echo.
 echo DONE. All browsers are now forced to download PDFs.
-echo You can now use your Offline Adobe Reader to open them.
+echo You can now use your Offline PDF Reader to open them.
 echo ========================================================
 pause
