@@ -37,7 +37,7 @@ echo    - Success: Firefox policies removed.
 
 echo.
 echo [3/3] Closing running browsers to apply changes...
-for %%E in (chrome.exe msedge.exe brave.exe firefox.exe vivaldi.exe browser.exe opera.exe yandex.exe) do (
+for %%E in (chrome.exe msedge.exe msedgewebview2.exe brave.exe firefox.exe vivaldi.exe browser.exe opera.exe yandex.exe) do (
     taskkill /F /IM %%E /T >nul 2>&1
 )
 

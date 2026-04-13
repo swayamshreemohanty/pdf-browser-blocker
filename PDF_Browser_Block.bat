@@ -29,14 +29,20 @@ for %%B in (Google\Chrome Microsoft\Edge BraveSoftware\Brave Chromium Vivaldi Ya
 echo    - Success: Chromium policies applied.
 
 echo.
-echo [2/3] Applying Mozilla Firefox restrictions...
+echo [2/4] Applying Mozilla Firefox restrictions...
 :: Using Registry for Firefox Enterprise Policies 
 reg add "HKLM\SOFTWARE\Policies\Mozilla\Firefox\PDFjs" /v Enabled /t REG_DWORD /d 0 /f >nul 2>&1
 echo    - Success: Firefox policy applied via registry.
 
 echo.
-echo [3/3] Closing running browsers to apply settings...
-for %%E in (chrome.exe msedge.exe brave.exe firefox.exe vivaldi.exe browser.exe opera.exe yandex.exe) do (
+echo [3/4] Resetting Windows Default PDF Viewer (Removing Edge takeover)...
+reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.pdf\UserChoice" /f >nul 2>&1
+reg delete "HKCU\Software\Classes\.pdf" /f >nul 2>&1
+echo    - Success: Cleared Windows PDF default association. You will be prompted to pick your PDF Reader!
+
+echo.
+echo [4/4] Closing running browsers to apply settings...
+for %%E in (chrome.exe msedge.exe msedgewebview2.exe brave.exe firefox.exe vivaldi.exe browser.exe opera.exe yandex.exe) do (
     taskkill /F /IM %%E /T >nul 2>&1
 )
 
