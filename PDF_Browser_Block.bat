@@ -24,6 +24,7 @@ echo.
 echo [1/3] Applying Chromium-based restrictions (Chrome, Edge, Brave, etc.)...
 for %%B in (Google\Chrome Microsoft\Edge BraveSoftware\Brave Chromium Vivaldi YandexBrowser OperaSoftware\Opera) do (
     reg add "HKLM\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul 2>&1
+    reg add "HKCU\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul 2>&1
 )
 echo    - Success: Chromium policies applied.
 

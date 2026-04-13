@@ -23,6 +23,7 @@ echo.
 echo [1/3] Removing Chromium-based restrictions...
 for %%B in (Google\Chrome Microsoft\Edge BraveSoftware\Brave Chromium Vivaldi YandexBrowser OperaSoftware\Opera) do (
     reg delete "HKLM\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /f >nul 2>&1
+    reg delete "HKCU\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /f >nul 2>&1
 )
 echo    - Success: Chromium policies removed.
 
