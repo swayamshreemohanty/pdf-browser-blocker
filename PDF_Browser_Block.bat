@@ -32,8 +32,13 @@ reg add "HKCU\SOFTWARE\Policies\Microsoft\Edge" /v AlwaysOpenPdfExternally /t RE
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v ShowPDFDefaultRecommendationsEnabled /t REG_DWORD /d 0 /f >nul 2>&1
 reg add "HKCU\SOFTWARE\Policies\Microsoft\Edge" /v ShowPDFDefaultRecommendationsEnabled /t REG_DWORD /d 0 /f >nul 2>&1
 
-:: System level Edge association block
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.pdf\UserChoice" /v ProgId /t REG_SZ /d "AcroExch.Document.DC" /f >nul 2>&1
+:: Remove Microsoft Edge from Windows "Open With" list and Default Programs list for PDFs
+reg delete "HKLM\SOFTWARE\Classes\.pdf\OpenWithProgids" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Classes\.pdf\OpenWithProgids" /v MSEdgePDF /f >nul 2>&1
+reg delete "HKCR\.pdf\OpenWithProgids" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKCR\.pdf\OpenWithProgids" /v MSEdgePDF /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Clients\StartMenuInternet\Microsoft Edge\Capabilities\FileAssociations" /v .pdf /t REG_SZ /d "" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Clients\StartMenuInternet\Microsoft Edge\Capabilities\FileAssociations" /v .pdf /f >nul 2>&1
 
 echo    - Success: Chromium policies applied.
 

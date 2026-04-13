@@ -30,6 +30,11 @@ for %%B in (Google\Chrome Microsoft\Edge BraveSoftware\Brave Chromium Vivaldi Ya
 reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v ShowPDFDefaultRecommendationsEnabled /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\Policies\Microsoft\Edge" /v ShowPDFDefaultRecommendationsEnabled /f >nul 2>&1
 
+:: Restoring Edge as an available PDF handler in Windows
+reg add "HKLM\SOFTWARE\Classes\.pdf\OpenWithProgids" /v MSEdgePDF /t REG_SZ /d "" /f >nul 2>&1
+reg add "HKCR\.pdf\OpenWithProgids" /v MSEdgePDF /t REG_SZ /d "" /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Clients\StartMenuInternet\Microsoft Edge\Capabilities\FileAssociations" /v .pdf /t REG_SZ /d "MSEdgePDF" /f >nul 2>&1
+
 echo    - Success: Chromium policies removed.
 
 echo.
