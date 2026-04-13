@@ -26,6 +26,15 @@ for %%B in (Google\Chrome Microsoft\Edge BraveSoftware\Brave Chromium Vivaldi Ya
     reg add "HKLM\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul 2>&1
     reg add "HKCU\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul 2>&1
 )
+:: Specific Edge policies to completely stop the internal PDF reader
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKCU\SOFTWARE\Policies\Microsoft\Edge" /v AlwaysOpenPdfExternally /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v ShowPDFDefaultRecommendationsEnabled /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKCU\SOFTWARE\Policies\Microsoft\Edge" /v ShowPDFDefaultRecommendationsEnabled /t REG_DWORD /d 0 /f >nul 2>&1
+
+:: System level Edge association block
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.pdf\UserChoice" /v ProgId /t REG_SZ /d "AcroExch.Document.DC" /f >nul 2>&1
+
 echo    - Success: Chromium policies applied.
 
 echo.

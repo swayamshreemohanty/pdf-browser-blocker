@@ -25,6 +25,11 @@ for %%B in (Google\Chrome Microsoft\Edge BraveSoftware\Brave Chromium Vivaldi Ya
     reg delete "HKLM\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /f >nul 2>&1
     reg delete "HKCU\SOFTWARE\Policies\%%B" /v AlwaysOpenPdfExternally /f >nul 2>&1
 )
+
+:: Removing Specific Edge policies
+reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v ShowPDFDefaultRecommendationsEnabled /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Policies\Microsoft\Edge" /v ShowPDFDefaultRecommendationsEnabled /f >nul 2>&1
+
 echo    - Success: Chromium policies removed.
 
 echo.
